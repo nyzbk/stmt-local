@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { AfterSuccessAd, MidContentAd } from "@/components/ads/AdUnit";
-import { SoftAgencyCta } from "@/components/SoftAgencyCta";
 import { Button } from "@/components/ui/button";
 import { FilePlus } from "lucide-react";
-import { FAQ_ITEMS } from "@/lib/ledger/faq";
 import { COLUMN_ROLES, type ColumnRole, type ExtractSession } from "@/lib/ledger/types";
 import { ExtractError } from "@/lib/ledger/errors";
 import { exportCsv, exportXlsx } from "@/lib/ledger/export";
@@ -109,6 +107,14 @@ export function LedgerApp() {
         </h1>
         <p className="mt-4 max-w-xl text-base text-muted">
           The file never leaves this device. No upload. No account. No watermark.
+          Ledger is for the PDF your bank already emailed — a text layer, not a photo
+          of a paper statement. Extraction runs in this tab with PDF.js and SheetJS.
+          We cannot see the transactions.
+        </p>
+        <p className="mt-3 max-w-xl text-sm text-muted">
+          Check the preview table, remap columns if a header is local, then download
+          Excel or CSV. Always compare the sheet to the original PDF before you file
+          taxes or send it to an accountant. Ledger is not a bank.
         </p>
         <ul className="mt-5 flex flex-wrap gap-2 text-xs text-muted">
           {["No upload", "No account", "Stays on this device"].map((c) => (
@@ -267,7 +273,6 @@ export function LedgerApp() {
           <p className="text-xs text-faint">
             Always check the exported numbers against the original PDF before you file or send them.
           </p>
-          <SoftAgencyCta />
           <AfterSuccessAd />
         </section>
       )}
@@ -287,24 +292,6 @@ export function LedgerApp() {
       </section>
 
       <MidContentAd />
-
-      <Faq />
     </div>
-  );
-}
-
-function Faq() {
-  return (
-    <section className="mt-6 max-w-2xl">
-      <h2 className="font-serif text-2xl">Questions</h2>
-      <dl className="mt-6 space-y-5">
-        {FAQ_ITEMS.map((it) => (
-          <div key={it.q}>
-            <dt className="font-medium">{it.q}</dt>
-            <dd className="mt-1 text-sm text-muted">{it.a}</dd>
-          </div>
-        ))}
-      </dl>
-    </section>
   );
 }

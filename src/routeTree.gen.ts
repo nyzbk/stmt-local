@@ -11,11 +11,20 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as HowToRouteImport } from './routes/how-to'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as UseCasesRouteImport } from './routes/use-cases'
+import { Route as UseCasesIndexRouteImport } from './routes/use-cases.index'
+import { Route as UseCasesAccountantRouteImport } from './routes/use-cases.accountant'
+import { Route as UseCasesBudgetRouteImport } from './routes/use-cases.budget'
+import { Route as UseCasesMultiPageRouteImport } from './routes/use-cases.multi-page'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -27,9 +36,29 @@ const SplatRoute = SplatRouteImport.update({
   path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HowItWorksRoute = HowItWorksRouteImport.update({
   id: '/how-it-works',
   path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowToRoute = HowToRouteImport.update({
+  id: '/how-to',
+  path: '/how-to',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -52,73 +81,155 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UseCasesRoute = UseCasesRouteImport.update({
+  id: '/use-cases',
+  path: '/use-cases',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UseCasesIndexRoute = UseCasesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UseCasesRoute,
+} as any)
+const UseCasesAccountantRoute = UseCasesAccountantRouteImport.update({
+  id: '/accountant',
+  path: '/accountant',
+  getParentRoute: () => UseCasesRoute,
+} as any)
+const UseCasesBudgetRoute = UseCasesBudgetRouteImport.update({
+  id: '/budget',
+  path: '/budget',
+  getParentRoute: () => UseCasesRoute,
+} as any)
+const UseCasesMultiPageRoute = UseCasesMultiPageRouteImport.update({
+  id: '/multi-page',
+  path: '/multi-page',
+  getParentRoute: () => UseCasesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/how-to': typeof HowToRoute
   '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/use-cases': typeof UseCasesRouteWithChildren
+  '/use-cases/accountant': typeof UseCasesAccountantRoute
+  '/use-cases/budget': typeof UseCasesBudgetRoute
+  '/use-cases/multi-page': typeof UseCasesMultiPageRoute
+  '/use-cases/': typeof UseCasesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/how-to': typeof HowToRoute
   '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/use-cases/accountant': typeof UseCasesAccountantRoute
+  '/use-cases/budget': typeof UseCasesBudgetRoute
+  '/use-cases/multi-page': typeof UseCasesMultiPageRoute
+  '/use-cases': typeof UseCasesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
   '/how-it-works': typeof HowItWorksRoute
+  '/how-to': typeof HowToRoute
   '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/use-cases': typeof UseCasesRouteWithChildren
+  '/use-cases/accountant': typeof UseCasesAccountantRoute
+  '/use-cases/budget': typeof UseCasesBudgetRoute
+  '/use-cases/multi-page': typeof UseCasesMultiPageRoute
+  '/use-cases/': typeof UseCasesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/$'
+    | '/about'
+    | '/contact'
+    | '/faq'
     | '/how-it-works'
+    | '/how-to'
     | '/privacy'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/terms'
+    | '/use-cases'
+    | '/use-cases/accountant'
+    | '/use-cases/budget'
+    | '/use-cases/multi-page'
+    | '/use-cases/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$'
+    | '/about'
+    | '/contact'
+    | '/faq'
     | '/how-it-works'
+    | '/how-to'
     | '/privacy'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/terms'
+    | '/use-cases/accountant'
+    | '/use-cases/budget'
+    | '/use-cases/multi-page'
+    | '/use-cases'
   id:
     | '__root__'
     | '/'
     | '/$'
+    | '/about'
+    | '/contact'
+    | '/faq'
     | '/how-it-works'
+    | '/how-to'
     | '/privacy'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/terms'
+    | '/use-cases'
+    | '/use-cases/accountant'
+    | '/use-cases/budget'
+    | '/use-cases/multi-page'
+    | '/use-cases/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
+  FaqRoute: typeof FaqRoute
   HowItWorksRoute: typeof HowItWorksRoute
+  HowToRoute: typeof HowToRoute
   PrivacyRoute: typeof PrivacyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
+  UseCasesRoute: typeof UseCasesRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -137,11 +248,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/how-it-works': {
       id: '/how-it-works'
       path: '/how-it-works'
       fullPath: '/how-it-works'
       preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-to': {
+      id: '/how-to'
+      path: '/how-to'
+      fullPath: '/how-to'
+      preLoaderRoute: typeof HowToRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -172,17 +311,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/use-cases': {
+      id: '/use-cases'
+      path: '/use-cases'
+      fullPath: '/use-cases'
+      preLoaderRoute: typeof UseCasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/use-cases/': {
+      id: '/use-cases/'
+      path: '/'
+      fullPath: '/use-cases/'
+      preLoaderRoute: typeof UseCasesIndexRouteImport
+      parentRoute: typeof UseCasesRoute
+    }
+    '/use-cases/accountant': {
+      id: '/use-cases/accountant'
+      path: '/accountant'
+      fullPath: '/use-cases/accountant'
+      preLoaderRoute: typeof UseCasesAccountantRouteImport
+      parentRoute: typeof UseCasesRoute
+    }
+    '/use-cases/budget': {
+      id: '/use-cases/budget'
+      path: '/budget'
+      fullPath: '/use-cases/budget'
+      preLoaderRoute: typeof UseCasesBudgetRouteImport
+      parentRoute: typeof UseCasesRoute
+    }
+    '/use-cases/multi-page': {
+      id: '/use-cases/multi-page'
+      path: '/multi-page'
+      fullPath: '/use-cases/multi-page'
+      preLoaderRoute: typeof UseCasesMultiPageRouteImport
+      parentRoute: typeof UseCasesRoute
+    }
   }
 }
+
+interface UseCasesRouteChildren {
+  UseCasesAccountantRoute: typeof UseCasesAccountantRoute
+  UseCasesBudgetRoute: typeof UseCasesBudgetRoute
+  UseCasesMultiPageRoute: typeof UseCasesMultiPageRoute
+  UseCasesIndexRoute: typeof UseCasesIndexRoute
+}
+
+const UseCasesRouteChildren: UseCasesRouteChildren = {
+  UseCasesAccountantRoute: UseCasesAccountantRoute,
+  UseCasesBudgetRoute: UseCasesBudgetRoute,
+  UseCasesMultiPageRoute: UseCasesMultiPageRoute,
+  UseCasesIndexRoute: UseCasesIndexRoute,
+}
+
+const UseCasesRouteWithChildren = UseCasesRoute._addFileChildren(
+  UseCasesRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
+  FaqRoute: FaqRoute,
   HowItWorksRoute: HowItWorksRoute,
+  HowToRoute: HowToRoute,
   PrivacyRoute: PrivacyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
+  UseCasesRoute: UseCasesRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

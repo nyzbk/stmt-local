@@ -1,5 +1,6 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { AuthProvider } from "@/lib/auth/provider";
+import { NotFoundPage } from "@/components/NotFoundPage";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { siteJsonLd } from "@/lib/json-ld";
 import { SITE } from "@/lib/site";
@@ -9,6 +10,7 @@ import appCss from "../styles.css?url";
 const jsonLd = siteJsonLd();
 
 export const Route = createRootRoute({
+  notFoundComponent: NotFoundPage,
   head: () => ({
     meta: [
       { charSet: "utf-8" },

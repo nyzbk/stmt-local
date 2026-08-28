@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { FooterAd } from "@/components/ads/AdUnit";
 import { SoftAgencyCta } from "@/components/SoftAgencyCta";
 import { Mark } from "@/components/Mark";
+import { FOOTER_NAV, NAV } from "@/lib/site";
 
 export function SiteShell({ children }: { children: ReactNode }) {
   return (
@@ -14,21 +15,21 @@ export function SiteShell({ children }: { children: ReactNode }) {
         Skip to tool
       </a>
       <header className="border-b border-line bg-surface/90 backdrop-blur-sm">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4">
+        <div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-1">
           <Link to="/" className="flex min-h-11 items-center gap-2 font-medium tracking-tight">
             <Mark />
             <span className="font-serif text-lg">Ledger</span>
           </Link>
-          <nav className="flex items-center gap-1 text-sm text-muted">
-            <Link to="/how-it-works" className="inline-flex min-h-11 items-center px-2 hover:text-ink">
-              How it works
-            </Link>
-            <Link to="/privacy" className="inline-flex min-h-11 items-center px-2 hover:text-ink">
-              Privacy
-            </Link>
-            <Link to="/terms" className="hidden min-h-11 items-center px-2 hover:text-ink sm:inline-flex">
-              Terms
-            </Link>
+          <nav aria-label="Primary" className="flex flex-wrap items-center gap-1 text-sm text-muted">
+            {NAV.filter((l) => l.to !== "/").map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                className="inline-flex min-h-11 items-center px-2 hover:text-ink"
+              >
+                {l.label}
+              </Link>
+            ))}
           </nav>
         </div>
       </header>
@@ -36,16 +37,12 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <footer className="border-t border-line bg-surface">
         <div className="mx-auto max-w-6xl px-4 py-10">
           <SoftAgencyCta />
-          <nav className="mt-4 flex flex-wrap justify-center gap-4 text-sm text-muted">
-            <Link to="/how-it-works" className="hover:text-ink">
-              How it works
-            </Link>
-            <Link to="/privacy" className="hover:text-ink">
-              Privacy
-            </Link>
-            <Link to="/terms" className="hover:text-ink">
-              Terms
-            </Link>
+          <nav aria-label="Footer" className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-muted">
+            {FOOTER_NAV.map((l) => (
+              <Link key={l.to} to={l.to} className="hover:text-ink">
+                {l.label}
+              </Link>
+            ))}
           </nav>
           <p className="mt-6 text-center text-xs text-faint">
             Ledger is not a bank. Check exported numbers against the original PDF
