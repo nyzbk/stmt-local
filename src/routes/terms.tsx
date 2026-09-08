@@ -20,7 +20,7 @@ export const Route = createFileRoute("/terms")({
 function Terms() {
   return (
     <DocPage title="Terms">
-      <p>Last updated 28 August 2026. Operator: {SITE.operator}.</p>
+      <p>Last updated 8 September 2026. Operator: {SITE.operator}.</p>
       <p>
         Ledger is a free browser tool that attempts to turn a text-based bank statement
         PDF into a spreadsheet. It is provided as-is. Banks do not share one layout.
@@ -37,6 +37,25 @@ function Terms() {
         The site is hosted on HTTPS. Hosting a static converter is not custody of your
         money. Contact: {SITE.contactEmail}. Do not email the PDF.{" "}
         <Link to="/privacy">Privacy</Link>.
+      </p>
+      <h2>What the sheet is not</h2>
+      <p>
+        Ledger is not a payment institution, not a tax agent, and not a substitute for
+        the PDF your bank signed. If a mapped column is wrong, you fix it before
+        anyone else relies on the sheet. If you are not allowed to process a
+        statement — someone else’s account, a file from work you should not have —
+        do not drop it here.
+      </p>
+      <p>
+        We may show Google ads after Site Ready. Ads are not advice. Do not click
+        them. Do not ask other people to click them. Invalid traffic is an AdSense
+        program-policy violation (help 48182) and it burns the whole account, not one
+        site.
+      </p>
+      <p>
+        The sample PDF on the home page is generated. It is not a real bank’s
+        document. Do not treat sample rows as evidence of anything. Last updated 8
+        September 2026. Contact without attachments: {SITE.contactEmail}.
       </p>
       <p>
         <Link to="/">Back to the tool</Link>
