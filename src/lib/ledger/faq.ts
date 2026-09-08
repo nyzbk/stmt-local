@@ -55,4 +55,16 @@ export const FAQ_ITEMS = [
     q: "Can I use this as my only tax record?",
     a: "No. Keep the original PDF from the bank. Ledger is a convenience table, not a filing, not advice, and not a substitute for the institution’s document. If a column mapped to Description that was really a cheque number, fix it before anyone else sees the sheet.",
   },
+  {
+    q: "Can you connect to my bank or import via Open Banking?",
+    a: "No. Ledger never holds a bank login, a refresh token, or a Plaid-style connection. If your bank offers Open Banking or a CSV download, use that. This tab only reads a PDF you already have. A “connect your bank” button would be a different product and a different threat model, and we will not add it to look like a fintech dashboard.",
+  },
+  {
+    q: "Why not email you a redacted PDF so you can add a template?",
+    a: "Because the inbox would then contain a bank statement, redacted or not. Ledger’s heuristic is header names plus spacing, not a hidden per-bank template we maintain from customer uploads. Describe the header row in words. Use the sample file. We will not take PDFs to grow a template pack.",
+  },
+  {
+    q: "Does the Excel file count as an official statement for a visa, mortgage, or tax office?",
+    a: "No. Keep the original PDF. Some offices want the bank’s own document with letterhead. Ledger’s sheet is a working table you can sort. Submitting only the spreadsheet as if it were issued by the bank is on you, and our terms forbid using the export to misrepresent activity.",
+  },
 ] as const;
