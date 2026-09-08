@@ -14,3 +14,5 @@
 - [ ] `npm run typecheck` and `npm run build` pass
 - [ ] No real bank statements in git
 - [ ] `VITE_ADSENSE_LIVE` is not true
+- [ ] AdsBot curl `/contact` visible words ≥400
+- [ ] AdsBot curl `/use-cases` visible words ≥400
