@@ -9,7 +9,7 @@ export const Route = createFileRoute("/how-it-works")({
       {
         name: "description",
         content:
-          "Step-by-step: drop a digital bank PDF, remap columns on this device, download Excel. PDF.js and SheetJS run in the tab. Scans and locked files are refused.",
+          "Step-by-step: drop a digital bank PDF, remap columns on this device, download Excel. PDF.js and SheetJS run in the tab. Scans are refused. Locked files use the password page.",
       },
     ],
     links: [{ rel: "canonical", href: `${SITE.origin}/how-it-works` }],
@@ -86,7 +86,7 @@ function How() {
       <h2>If it fails</h2>
       <ul>
         <li>Scan or photo — no text layer. Re-download a digital statement.</li>
-        <li>Password prompt in the bank PDF — unlock it in the bank’s own app first.</li>
+        <li>Password prompt in the bank PDF — use the Locked PDF page and type the password in this tab. We do not emit an unlocked.pdf.</li>
         <li>Only a logo extracts — the file is likely image-only even if it is named .pdf.</li>
         <li>Columns shift on page 4 — remap, or split the PDF in the bank portal and drop the month again.</li>
         <li>Tab crashes — the file is too large for the phone. Use a desktop browser or a shorter date range.</li>
@@ -128,6 +128,8 @@ function How() {
 
       <p>
         <Link to="/">Back to the tool</Link>
+        {" · "}
+        <Link to="/password">Locked PDF</Link>
         {" · "}
         <Link to="/use-cases">Use cases</Link>
         {" · "}

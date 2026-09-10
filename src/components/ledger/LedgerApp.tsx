@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { AfterSuccessAd, MidContentAd } from "@/components/ads/AdUnit";
 import { Button } from "@/components/ui/button";
 import { FilePlus } from "lucide-react";
@@ -10,14 +11,18 @@ import { cn, formatBytes } from "@/lib/utils";
 
 type Status = "idle" | "ready" | "working" | "done" | "error";
 
-export function LedgerApp() {
+export function LedgerApp({ variant = "home" }: { variant?: "home" | "password" }) {
+  const locked = variant === "password";
   const inputId = useId();
+  const passwordId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [file, setFile] = useState<File | null>(null);
+  const [password, setPassword] = useState("");
   const [progress, setProgress] = useState<{ page: number; total: number } | null>(null);
   const [session, setSession] = useState<ExtractSession | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<string | null>(null);
   const [parenNegative, setParenNegative] = useState(true);
   const [dragOver, setDragOver] = useState(false);
 
@@ -41,12 +46,14 @@ export function LedgerApp() {
     if (!f) return;
     if (!/\.pdf$/i.test(f.name) && f.type !== "application/pdf") {
       setError("Drop a PDF statement.");
+      setErrorCode("generic");
       setStatus("error");
       return;
     }
     setFile(f);
     setSession(null);
     setError(null);
+    setErrorCode(null);
     setStatus("ready");
   };
 
@@ -59,15 +66,28 @@ export function LedgerApp() {
   const extract = useCallback(async (target?: File) => {
     const src = target ?? file;
     if (!src) return;
+    if (locked && !password) {
+      setError("Type the password this statement was saved with. It stays in this tab.");
+      setErrorCode("password");
+      setStatus("error");
+      return;
+    }
     setStatus("working");
     setError(null);
+    setErrorCode(null);
     setProgress({ page: 0, total: 1 });
     try {
       const { extractStatement } = await import("@/lib/ledger/extract");
-      const result = await extractStatement(src, setProgress);
+      const result = await extractStatement(
+        src,
+        setProgress,
+        locked && password ? { password } : undefined,
+      );
       setSession(result);
       setStatus("done");
+      setPassword("");
     } catch (err) {
+      const code = err instanceof ExtractError ? err.code : "generic";
       const msg =
         err instanceof ExtractError
           ? err.message
@@ -75,17 +95,20 @@ export function LedgerApp() {
             ? err.message
             : "Something went wrong while reading the PDF.";
       setError(msg);
+      setErrorCode(code);
       setStatus("error");
     } finally {
       setProgress(null);
     }
-  }, [file]);
+  }, [file, locked, password]);
 
   const reset = () => {
     setStatus("idle");
     setFile(null);
+    setPassword("");
     setSession(null);
     setError(null);
+    setErrorCode(null);
     setProgress(null);
     if (inputRef.current) inputRef.current.value = "";
   };
@@ -103,21 +126,32 @@ export function LedgerApp() {
           Private · on this device
         </p>
         <h1 className="mt-3 font-serif text-4xl leading-tight tracking-tight sm:text-5xl">
-          Convert a bank statement PDF into Excel.
+          {locked ? "Open a password-locked statement" : "Convert a bank statement PDF into Excel."}
         </h1>
         <p className="mt-4 max-w-xl text-base text-muted">
-          The file never leaves this device. No upload. No account. No watermark.
-          Ledger is for the PDF your bank already emailed — a text layer, not a photo
-          of a paper statement. Extraction runs in this tab with PDF.js and SheetJS.
-          We cannot see the transactions.
+          {locked
+            ? "Some banks email a PDF that opens only with a password. Type that password here. PDF.js uses it in this tab to read the text layer, then the same extract as the home tool writes Excel or CSV. The password is not put in the URL and is not written to localStorage. We do not download an unlocked PDF — that would be a different product."
+            : "The file never leaves this device. No upload. No account. No watermark. Ledger is for the PDF your bank already emailed — a text layer, not a photo of a paper statement. Extraction runs in this tab with PDF.js and SheetJS. We cannot see the transactions."}
         </p>
-        <p className="mt-3 max-w-xl text-sm text-muted">
-          Check the preview table, remap columns if a header is local, then download
-          Excel or CSV. Always compare the sheet to the original PDF before you file
-          taxes or send it to an accountant. Ledger is not a bank.
-        </p>
+        {!locked && (
+          <p className="mt-3 max-w-xl text-sm text-muted">
+            Check the preview table, remap columns if a header is local, then download
+            Excel or CSV. Always compare the sheet to the original PDF before you file
+            taxes or send it to an accountant. Ledger is not a bank.
+          </p>
+        )}
+        {locked && (
+          <p className="mt-3 max-w-xl text-sm text-muted">
+            Use the password your bank set when it exported the statement — often a
+            customer number or a date of birth in the format they told you. If you no
+            longer know it, only the bank can reset it. We cannot.
+          </p>
+        )}
         <ul className="mt-5 flex flex-wrap gap-2 text-xs text-muted">
-          {["No upload", "No account", "Stays on this device"].map((c) => (
+          {(locked
+            ? ["Password stays in this tab", "No unlocked.pdf", "Same Excel / CSV"]
+            : ["No upload", "No account", "Stays on this device"]
+          ).map((c) => (
             <li
               key={c}
               className="rounded-full border border-line bg-surface px-3 py-1.5"
@@ -156,9 +190,31 @@ export function LedgerApp() {
           <span className="flex size-12 items-center justify-center rounded-md border border-line bg-surface">
             <FilePlus className="size-5" strokeWidth={1.6} aria-hidden="true" />
           </span>
-          <span className="mt-3 font-medium">Drop a PDF statement</span>
+          <span className="mt-3 font-medium">
+            {locked ? "Drop a locked PDF statement" : "Drop a PDF statement"}
+          </span>
           <span className="mt-1 text-sm text-muted">or click to choose a file · up to 3 PDFs</span>
         </label>
+
+        {locked && (
+          <div className="mt-4">
+            <label htmlFor={passwordId} className="block text-sm font-medium">
+              Statement password
+            </label>
+            <input
+              id={passwordId}
+              type="password"
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              name="statement-pdf-open"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 min-h-11 w-full max-w-md rounded-md border border-line bg-bg px-3 text-sm"
+              placeholder="Typed here only · not saved"
+            />
+          </div>
+        )}
 
         {file && (
           <p className="mt-4 text-sm text-muted">
@@ -175,6 +231,14 @@ export function LedgerApp() {
         {error && (
           <p className="mt-4 text-sm text-danger" role="alert">
             {error}
+            {!locked && errorCode === "password" ? (
+              <>
+                {" "}
+                <Link to="/password" className="underline underline-offset-2">
+                  Open a password-locked statement
+                </Link>
+              </>
+            ) : null}
           </p>
         )}
 
@@ -185,9 +249,11 @@ export function LedgerApp() {
           >
             {status === "working" ? "Extracting…" : "Extract transactions"}
           </Button>
-          <Button variant="secondary" type="button" onClick={() => void loadSample()}>
-            Try a sample statement
-          </Button>
+          {!locked && (
+            <Button variant="secondary" type="button" onClick={() => void loadSample()}>
+              Try a sample statement
+            </Button>
+          )}
           {(file || session) && (
             <Button variant="ghost" type="button" onClick={reset}>
               Reset
@@ -196,7 +262,7 @@ export function LedgerApp() {
         </div>
       </div>
 
-      {status === "done" && table && (
+      {status === "done" && table && session && (
         <section className="success-section mt-10 space-y-6">
           {session.warnings.map((w) => (
             <p key={w} className="text-sm text-muted">
@@ -278,11 +344,18 @@ export function LedgerApp() {
       )}
 
       <section className="mt-16 grid gap-8 sm:grid-cols-3">
-        {[
-          { n: "1", t: "Drop the PDF", d: "A digital statement from your bank — not a photo of paper." },
-          { n: "2", t: "Check the table", d: "Remap Date, Description, Debit, Credit, Balance if needed." },
-          { n: "3", t: "Download Excel", d: "Or CSV. Nothing was uploaded. Close the tab and it is gone." },
-        ].map((s) => (
+        {(locked
+          ? [
+              { n: "1", t: "Drop the locked PDF", d: "The file your bank emailed with a password on open." },
+              { n: "2", t: "Type the password here", d: "In this tab only. Not the URL. Not localStorage." },
+              { n: "3", t: "Download Excel", d: "Same table as the home tool. No unlocked.pdf download." },
+            ]
+          : [
+              { n: "1", t: "Drop the PDF", d: "A digital statement from your bank — not a photo of paper." },
+              { n: "2", t: "Check the table", d: "Remap Date, Description, Debit, Credit, Balance if needed." },
+              { n: "3", t: "Download Excel", d: "Or CSV. Nothing was uploaded. Close the tab and it is gone." },
+            ]
+        ).map((s) => (
           <div key={s.n} className="rounded-lg border border-line bg-surface p-5">
             <p className="font-mono text-xs text-accent">{s.n}</p>
             <h2 className="mt-2 font-serif text-xl">{s.t}</h2>

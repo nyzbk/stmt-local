@@ -15,6 +15,14 @@ export function HomeCopy() {
         document body.
       </p>
       <p>
+        If the bank locked the PDF, do not email it to us. Use the{" "}
+        <Link to="/password" className="text-accent underline underline-offset-2">
+          Locked PDF
+        </Link>{" "}
+        page and type the password in that tab. The home drop zone has no password
+        field on purpose.
+      </p>
+      <p>
         That matters because a statement is not a holiday photo. It names payees, shows
         a running balance, and sometimes prints an IBAN in the header. The only honest
         way to say “we cannot see it” is if the bytes never leave the device. Close the

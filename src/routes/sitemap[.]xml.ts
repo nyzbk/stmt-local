@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 const PATHS: Array<{ path: string; lastmod: string; changefreq: string; priority: string }> = [
   { path: "/", lastmod: "2026-08-28", changefreq: "weekly", priority: "1.0" },
+  { path: "/password", lastmod: "2026-09-10", changefreq: "weekly", priority: "0.9" },
   { path: "/how-it-works", lastmod: "2026-08-28", changefreq: "weekly", priority: "0.9" },
   { path: "/faq", lastmod: "2026-09-08", changefreq: "weekly", priority: "0.8" },
   { path: "/use-cases", lastmod: "2026-09-08", changefreq: "weekly", priority: "0.8" },

@@ -20,13 +20,16 @@ export const Route = createFileRoute("/privacy")({
 function Privacy() {
   return (
     <DocPage title="Privacy">
-      <p>Last updated 8 September 2026. Operator: {SITE.operator}.</p>
+      <p>Last updated 10 September 2026. Operator: {SITE.operator}.</p>
       <p>
         Your statement is processed only in memory, in this browser tab. We cannot see
         it. There is no upload of PDF bytes to any server — no POST or PUT of the File,
         ArrayBuffer, or a data URL. We do not run a third-party conversion API. We do
         not send transactions to an LLM. We do not store statements, filenames, or
         extracted rows on a backend. Refresh or close the tab and the session is gone.
+        If you open a password-locked statement, the password is held only as a field
+        on that page. It is not written to localStorage and it is not placed in the URL.
+        We do not keep an unlocked copy of the PDF.
       </p>
       <p>
         Libraries (PDF.js, SheetJS, fonts, the PDF worker) load from this origin. That

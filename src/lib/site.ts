@@ -11,6 +11,7 @@ export const SITE = {
 
 export const NAV = [
   { to: "/", label: "Tool" },
+  { to: "/password", label: "Locked PDF" },
   { to: "/how-it-works", label: "How it works" },
   { to: "/faq", label: "FAQ" },
   { to: "/use-cases", label: "Use cases" },

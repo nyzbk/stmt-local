@@ -13,7 +13,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Which browsers work, including iPhone?",
-    a: "Current Chrome, Edge, Firefox, and Safari (including iOS Safari) can run the PDF worker. Stay in this tab while a large statement is reading; locking an old iPhone mid-parse can starve memory. If Safari complains about a worker, try the same PDF on desktop Chrome. Password-locked files must be unlocked in the bank app first.",
+    a: "Current Chrome, Edge, Firefox, and Safari (including iOS Safari) can run the PDF worker. Stay in this tab while a large statement is reading; locking an old iPhone mid-parse can starve memory. If Safari complains about a worker, try the same PDF on desktop Chrome. Password-locked files belong on the Locked PDF page — type the bank password in that tab.",
   },
   {
     q: "How large a PDF can I drop, and can I batch?",
@@ -66,5 +66,9 @@ export const FAQ_ITEMS = [
   {
     q: "Does the Excel file count as an official statement for a visa, mortgage, or tax office?",
     a: "No. Keep the original PDF. Some offices want the bank’s own document with letterhead. Ledger’s sheet is a working table you can sort. Submitting only the spreadsheet as if it were issued by the bank is on you, and our terms forbid using the export to misrepresent activity.",
+  },
+  {
+    q: "The PDF asks for a password. Do I send it to you?",
+    a: "No. Open the Locked PDF page on this site. Type the password the bank used when it exported the file. PDF.js calls getDocument with that password in this tab only. We do not put it in the URL, we do not write localStorage, and we do not email you an unlocked PDF. The download is still Excel or CSV of the table. If you forgot the password, only the bank can issue a new statement.",
   },
 ] as const;

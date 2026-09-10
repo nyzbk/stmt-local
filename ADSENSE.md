@@ -13,3 +13,8 @@ Required on every deploy:
 Contact ≥400 SSR. Use-cases index expanded. Не LIVE. Не Auto ads.
 Не Request review раньше 7 дней после этого деплоя (187 §7).
 Не принимать PDF на email.
+
+## Password page — 10.09.2026
+`/password` added. Same extract. LIVE still false. Auto ads OFF.
+Не Request review в день деплоя. Не Add site.
+

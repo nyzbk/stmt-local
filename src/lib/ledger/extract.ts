@@ -142,7 +142,9 @@ function columnsOf(rows: string[][], colCount: number): string[][] {
 export async function extractStatement(
   file: File,
   onProgress?: (p: ExtractProgress) => void,
+  options?: { password?: string },
 ): Promise<ExtractSession> {
+
   if (file.size > MAX_BYTES) {
     throw new ExtractError(
       "File too large for this device. Try a monthly statement, not a multi-year archive.",
@@ -156,6 +158,7 @@ export async function extractStatement(
   try {
     const loading = getDocument({
       data,
+      password: options?.password || undefined,
       disableAutoFetch: true,
       disableStream: true,
       useSystemFonts: true,
@@ -171,8 +174,14 @@ export async function extractStatement(
     const name = err instanceof Error ? err.name : "";
     const msg = err instanceof Error ? err.message : String(err);
     if (name === "PasswordException" || /password/i.test(msg)) {
+      if (options?.password) {
+        throw new ExtractError(
+          "Wrong password. It was not saved — not in the URL, not in localStorage. Try again in this tab.",
+          "password",
+        );
+      }
       throw new ExtractError(
-        "This PDF is locked. Unlock it in your bank app and drop it again.",
+        "This PDF is locked. Open the password page and type the bank password in this tab. We do not keep it.",
         "password",
       );
     }

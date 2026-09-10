@@ -37,6 +37,14 @@ export function SiteShell({ children }: { children: ReactNode }) {
       <footer className="border-t border-line bg-surface">
         <div className="mx-auto max-w-6xl px-4 py-10">
           <SoftAgencyCta />
+          <p className="mt-2 text-center">
+            <a
+              href="https://ultimatum-hub.vercel.app/"
+              className="inline-flex min-h-11 items-center rounded-md border border-line bg-bg px-4 text-sm font-medium text-ink hover:border-accent"
+            >
+              Ultimatum hub
+            </a>
+          </p>
           <nav aria-label="Footer" className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-muted">
             {FOOTER_NAV.map((l) => (
               <Link key={l.to} to={l.to} className="hover:text-ink">
