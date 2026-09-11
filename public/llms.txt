@@ -1,0 +1,36 @@
+# Ledger
+
+> Convert a PDF bank statement to Excel or CSV in the browser. The file never leaves this device.
+
+The public origin is https://stmt-local.vercel.app. Operated by Ultimatum. Contact ultaultimatum@gmail.com.
+
+## Tools
+
+* [Convert statement](https://stmt-local.vercel.app) — PDF → Excel/CSV in this tab.
+
+## Guides
+
+* [Locked PDF](https://stmt-local.vercel.app/password) — Password stays in the tab.
+* [How it works](https://stmt-local.vercel.app/how-it-works) — Tables, not OCR of a photo.
+* [FAQ](https://stmt-local.vercel.app/faq) — Privacy.
+* [Use cases](https://stmt-local.vercel.app/use-cases) — Accountant, budget, multi-page.
+* [Accountant](https://stmt-local.vercel.app/use-cases/accountant) — One packet per client.
+* [Budget](https://stmt-local.vercel.app/use-cases/budget) — CSV into a sheet.
+* [Multi-page](https://stmt-local.vercel.app/use-cases/multi-page) — What a long statement does.
+
+## Site pages
+
+* [About](https://stmt-local.vercel.app/about) — Operator and what this tool refuses to be.
+* [Contact](https://stmt-local.vercel.app/contact) — ultaultimatum@gmail.com
+* [Privacy](https://stmt-local.vercel.app/privacy) — Bytes stay in the tab.
+* [Terms](https://stmt-local.vercel.app/terms) — Not a studio, not a host.
+* [FAQ](https://stmt-local.vercel.app/faq) — Short answers.
+
+## Site
+
+* [Sitemap](https://stmt-local.vercel.app/sitemap.xml)
+* [llms.txt](https://stmt-local.vercel.app/llms.txt) — This file.
+
+## Not on this origin
+
+* Bytes stay in the tab. There is no conversion API and no `/blogs/` cluster.

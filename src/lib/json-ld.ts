@@ -16,6 +16,7 @@ export function siteJsonLd() {
       url: SITE.origin,
       applicationCategory: "FinanceApplication",
       operatingSystem: "Any",
+      isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       description: SITE.description,
     },
@@ -27,6 +28,13 @@ export function siteJsonLd() {
         name: it.q,
         acceptedAnswer: { "@type": "Answer", text: it.a },
       })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: SITE.operator,
+      email: SITE.contactEmail,
+      url: SITE.origin,
     },
     {
       "@context": "https://schema.org",

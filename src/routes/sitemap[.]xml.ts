@@ -13,6 +13,7 @@ const PATHS: Array<{ path: string; lastmod: string; changefreq: string; priority
   { path: "/contact", lastmod: "2026-09-08", changefreq: "monthly", priority: "0.5" },
   { path: "/privacy", lastmod: "2026-09-08", changefreq: "monthly", priority: "0.4" },
   { path: "/terms", lastmod: "2026-09-08", changefreq: "monthly", priority: "0.4" },
+  { path: "/llms.txt", lastmod: "2026-09-11", changefreq: "monthly", priority: "0.2" },
 ];
 
 export const Route = createFileRoute("/sitemap.xml")({
