@@ -18,3 +18,10 @@ Contact ≥400 SSR. Use-cases index expanded. Не LIVE. Не Auto ads.
 `/password` added. Same extract. LIVE still false. Auto ads OFF.
 Не Request review в день деплоя. Не Add site.
 
+## SEO/AEO 270 holes — 15.09.2026
+Per-page og:title = title. Canonical = that URL (root no longer forces /).
+FAQPage JSON-LD only on /faq. HowTo only on /how-it-works.
+llms.txt removed from sitemap. __grok studio links removed from head.
+LIVE still false. Review не жать. GSC sitemap re-submit — владелец.
+
+

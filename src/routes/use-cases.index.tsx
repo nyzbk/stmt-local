@@ -1,19 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DocPage } from "@/components/DocPage";
-import { SITE } from "@/lib/site";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/use-cases/")({
-  head: () => ({
-    meta: [
-      { title: "When to Convert a Bank PDF to Excel on This Device | Ledger" },
-      {
-        name: "description",
-        content:
-          "Use Ledger when you need a spreadsheet for an accountant, a budget CSV, or a multi-page digital statement — without uploading the PDF.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/use-cases` }],
-  }),
+  head: () =>
+    pageHead({
+      title: "When to Convert a Bank PDF to Excel on This Device | Ledger",
+      description:
+        "Use Ledger when you need a spreadsheet for an accountant, a budget CSV, or a multi-page digital statement — without uploading the PDF.",
+      path: "/use-cases",
+    }),
   component: UseCases,
 });
 

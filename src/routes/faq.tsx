@@ -1,20 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DocPage } from "@/components/DocPage";
 import { FAQ_ITEMS } from "@/lib/ledger/faq";
-import { SITE } from "@/lib/site";
+import { faqJsonLd } from "@/lib/json-ld";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/faq")({
-  head: () => ({
-    meta: [
-      { title: "FAQ — Bank Statement to Excel on This Device | Ledger" },
-      {
-        name: "description",
-        content:
-          "Does Ledger upload statements? Which PDFs work? iPhone, scans, ads, Excel accuracy, and how to contact the operator without sending the file.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/faq` }],
-  }),
+  head: () => {
+    const h = pageHead({
+      title: "FAQ — Bank Statement to Excel on This Device | Ledger",
+      description:
+        "Does Ledger upload statements? Which PDFs work? iPhone, scans, ads, Excel accuracy, and how to contact the operator without sending the file.",
+      path: "/faq",
+    });
+    return {
+      ...h,
+      scripts: [
+        ...h.scripts,
+        { type: "application/ld+json", children: JSON.stringify(faqJsonLd()) },
+      ],
+    };
+  },
   component: FaqPage,
 });
 

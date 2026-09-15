@@ -1,26 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DocPage } from "@/components/DocPage";
+import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({
-    meta: [
-      { title: "Terms — Ledger Is Not a Bank" },
-      {
-        name: "description",
-        content:
-          "Ledger is a free on-device converter. Exports are not official statements. Verify numbers. Do not use it to misrepresent transactions.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/terms` }],
-  }),
+  head: () =>
+    pageHead({
+      title: "Terms — Ledger Is Not a Bank",
+      description:
+        "Ledger is a free on-device converter. Exports are not official statements. Verify numbers. Do not use it to misrepresent transactions.",
+      path: "/terms",
+    }),
   component: Terms,
 });
 
 function Terms() {
   return (
-    <DocPage title="Terms">
-      <p>Last updated 8 September 2026. Operator: {SITE.operator}.</p>
+    <DocPage title="Terms — Ledger is not a bank">
+      <p>Last updated 15 September 2026. Operator: {SITE.operator}.</p>
       <p>
         Ledger is a free browser tool that attempts to turn a text-based bank statement
         PDF into a spreadsheet. It is provided as-is. Banks do not share one layout.
@@ -54,8 +51,13 @@ function Terms() {
       </p>
       <p>
         The sample PDF on the home page is generated. It is not a real bank’s
-        document. Do not treat sample rows as evidence of anything. Last updated 8
+        document. Do not treat sample rows as evidence of anything. Last updated 15
         September 2026. Contact without attachments: {SITE.contactEmail}.
+      </p>
+      <p>
+        Password-locked statements are opened only in this tab via PDF.js. We do not
+        sell an “unlocked PDF” download. If you do not know the bank password, only
+        the bank can issue a new file. Closing the tab drops the password from memory.
       </p>
       <p>
         <Link to="/">Back to the tool</Link>

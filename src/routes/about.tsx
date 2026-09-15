@@ -1,19 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DocPage } from "@/components/DocPage";
+import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About Ledger — On-Device Bank Statement Converter" },
-      {
-        name: "description",
-        content:
-          "Ledger is a local-first tool from Ultimatum: PDF.js plus an on-device table heuristic, no statement upload, no account, not a bank.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/about` }],
-  }),
+  head: () =>
+    pageHead({
+      title: "About Ledger — On-Device Bank Statement Converter",
+      description:
+        "Ledger is a local-first tool from Ultimatum: PDF.js plus an on-device table heuristic, no statement upload, no account, not a bank.",
+      path: "/about",
+    }),
   component: About,
 });
 

@@ -1,19 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DocPage } from "@/components/DocPage";
-import { SITE } from "@/lib/site";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/use-cases/accountant")({
-  head: () => ({
-    meta: [
-      { title: "Send an Accountant a Spreadsheet, Not the Bank PDF | Ledger" },
-      {
-        name: "description",
-        content:
-          "Convert a digital statement to Excel on this device, remap columns, and send the sheet. Keep the original PDF. Ledger is not a filing.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/use-cases/accountant` }],
-  }),
+  head: () =>
+    pageHead({
+      title: "Send an Accountant a Spreadsheet, Not the Bank PDF | Ledger",
+      description:
+        "Convert a digital statement to Excel on this device, remap columns, and send the sheet. Keep the original PDF. Ledger is not a filing.",
+      path: "/use-cases/accountant",
+    }),
   component: Accountant,
 });
 

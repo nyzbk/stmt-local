@@ -1,21 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { LedgerApp } from "@/components/ledger/LedgerApp";
-import { SITE } from "@/lib/site";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/password")({
-  head: () => ({
-    meta: [
-      {
-        title: "Open a password-locked bank statement PDF — Ledger",
-      },
-      {
-        name: "description",
-        content:
-          "Type the bank PDF password in this tab. PDF.js opens the file in memory. Ledger extracts the table to Excel or CSV. The password is not stored.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/password` }],
-  }),
+  head: () =>
+    pageHead({
+      title: "Open a password-locked bank statement PDF — Ledger",
+      description:
+        "Type the bank PDF password in this tab. PDF.js opens the file in memory. Ledger extracts the table to Excel or CSV. The password is not stored.",
+      path: "/password",
+    }),
   component: PasswordPage,
 });
 

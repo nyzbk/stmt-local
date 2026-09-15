@@ -1,19 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DocPage } from "@/components/DocPage";
-import { SITE } from "@/lib/site";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/use-cases/multi-page")({
-  head: () => ({
-    meta: [
-      { title: "Extract a Multi-Page Bank Statement PDF | Ledger" },
-      {
-        name: "description",
-        content:
-          "Ledger drops repeated page headers so “Date” is not a transaction. For digital multi-page statements in the browser, not scans.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/use-cases/multi-page` }],
-  }),
+  head: () =>
+    pageHead({
+      title: "Extract a Multi-Page Bank Statement PDF | Ledger",
+      description:
+        "Ledger drops repeated page headers so “Date” is not a transaction. For digital multi-page statements in the browser, not scans.",
+      path: "/use-cases/multi-page",
+    }),
   component: MultiPage,
 });
 

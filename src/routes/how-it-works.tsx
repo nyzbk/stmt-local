@@ -1,19 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DocPage } from "@/components/DocPage";
-import { SITE } from "@/lib/site";
+import { howToJsonLd } from "@/lib/json-ld";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/how-it-works")({
-  head: () => ({
-    meta: [
-      { title: "How to Convert a Bank Statement PDF in the Browser | Ledger" },
-      {
-        name: "description",
-        content:
-          "Step-by-step: drop a digital bank PDF, remap columns on this device, download Excel. PDF.js and SheetJS run in the tab. Scans are refused. Locked files use the password page.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/how-it-works` }],
-  }),
+  head: () => {
+    const h = pageHead({
+      title: "How to Convert a Bank Statement PDF in the Browser | Ledger",
+      description:
+        "Step-by-step: drop a digital bank PDF, remap columns on this device, download Excel. PDF.js and SheetJS run in the tab. Scans are refused. Locked files use the password page.",
+      path: "/how-it-works",
+    });
+    return {
+      ...h,
+      scripts: [
+        ...h.scripts,
+        { type: "application/ld+json", children: JSON.stringify(howToJsonLd()) },
+      ],
+    };
+  },
   component: How,
 });
 

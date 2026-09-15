@@ -1,19 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DocPage } from "@/components/DocPage";
+import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact Ledger — No Statement Uploads" },
-      {
-        name: "description",
-        content:
-          "Email Ultimatum about Ledger. Include the page URL and browser. Do not attach a bank statement PDF.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/contact` }],
-  }),
+  head: () =>
+    pageHead({
+      title: "Contact Ledger — No Statement Uploads",
+      description:
+        "Email Ultimatum about Ledger. Include the page URL and browser. Do not attach a bank statement PDF.",
+      path: "/contact",
+    }),
   component: Contact,
 });
 

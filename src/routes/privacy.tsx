@@ -1,25 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DocPage } from "@/components/DocPage";
+import { pageHead } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: "Privacy — Ledger Does Not Receive Your Statement" },
-      {
-        name: "description",
-        content:
-          "Bank statement PDFs are parsed only in this tab. No upload, no LLM, no storage of rows. Ads do not get the file. Contact without attachments.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/privacy` }],
-  }),
+  head: () =>
+    pageHead({
+      title: "Privacy — Ledger Does Not Receive Your Statement",
+      description:
+        "Bank statement PDFs are parsed only in this tab. No upload, no LLM, no storage of rows. Ads do not get the file. Contact without attachments.",
+      path: "/privacy",
+    }),
   component: Privacy,
 });
 
 function Privacy() {
   return (
-    <DocPage title="Privacy">
+    <DocPage title="Privacy — statements stay in this tab">
       <p>Last updated 10 September 2026. Operator: {SITE.operator}.</p>
       <p>
         Your statement is processed only in memory, in this browser tab. We cannot see

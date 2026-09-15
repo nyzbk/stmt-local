@@ -1,19 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DocPage } from "@/components/DocPage";
-import { SITE } from "@/lib/site";
+import { pageHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/use-cases/budget")({
-  head: () => ({
-    meta: [
-      { title: "Turn a Bank PDF into CSV for a Budget Sheet | Ledger" },
-      {
-        name: "description",
-        content:
-          "Export UTF-8 CSV from a digital statement in this browser. Parentheses-as-negative for accounting layouts. No upload to a converter.",
-      },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.origin}/use-cases/budget` }],
-  }),
+  head: () =>
+    pageHead({
+      title: "Turn a Bank PDF into CSV for a Budget Sheet | Ledger",
+      description:
+        "Export UTF-8 CSV from a digital statement in this browser. Parentheses-as-negative for accounting layouts. No upload to a converter.",
+      path: "/use-cases/budget",
+    }),
   component: Budget,
 });
 
