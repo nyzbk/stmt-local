@@ -21,7 +21,13 @@ Contact ≥400 SSR. Use-cases index expanded. Не LIVE. Не Auto ads.
 ## SEO/AEO 270 holes — 15.09.2026
 Per-page og:title = title. Canonical = that URL (root no longer forces /).
 FAQPage JSON-LD only on /faq. HowTo only on /how-it-works.
-llms.txt removed from sitemap. __grok studio links removed from head.
+llms.txt removed from sitemap.
+
+## grok-pwa OG + studio — 15.09.2026
+`resolveOgTitle` prefers `<title>` over `src/lib/og/site.json`.
+Vercel production (no `VITE_PUBLIC_HOSTNAME`) does not inject `/__grok/` manifest, apple-touch-icon, or grok.com extensions.js.
+Share metas grok-pwa does not rewrite (`og:url`, `og:image` on *.vercel.app) stay on the page.
 LIVE still false. Review не жать. GSC sitemap re-submit — владелец.
+Custom domain — владелец.
 
 

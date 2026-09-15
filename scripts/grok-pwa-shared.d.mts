@@ -5,6 +5,7 @@ export declare function escapeHtml(value: unknown): string;
 export declare function appNameFromHost(hostHeader: string | null | undefined): string;
 export declare function publicAppHost(hostHeader: string | null | undefined): string;
 export declare function resolvePublicHost(hostHeader: string | null | undefined): string;
+export declare function shouldInjectStudioChrome(hostHeader: string | null | undefined): boolean;
 export declare function isInstallQuery(url: string | null | undefined): boolean;
 export declare function isDocumentPath(pathname: string | null | undefined): boolean;
 export declare function acceptsHtml(accept: string | null | undefined): boolean;
@@ -49,6 +50,7 @@ export declare function customOgAssetPath(cwd?: string): string;
 export declare function resolveOgCardAsset(site?: OgSite, cwd?: string): string;
 export declare function ogServiceUrl(): string;
 export declare function titleFromDocument(html: string): string;
+export declare function metaContentFromDocument(html: string, key: string): string;
 export declare function resolveOgTitle(
   site?: OgSite,
   appName?: string,
@@ -61,9 +63,10 @@ export declare function grokOgHeadTags(ctx?: {
   appName?: string;
   site?: OgSite;
   documentTitle?: string;
+  documentDescription?: string;
   cwd?: string;
 }): string[];
-export declare function stripShareMetaTags(html: string): string;
+export declare function stripShareMetaTags(html: string, keys?: Iterable<string>): string;
 export declare function normalizeHeadContext(ctx?: GrokHeadContext): {
   appName: string;
   projectId: string;

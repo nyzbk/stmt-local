@@ -116,6 +116,23 @@ export function resolvePublicHost(hostHeader) {
   );
 }
 
+/**
+ * Studio PWA/extensions chrome belongs on grok.me preview and on published
+ * grok.me apps (VITE_PUBLIC_HOSTNAME set). A Vercel AdSense origin without a
+ * grok.me hostname must not leak /__grok/manifest or grok.com extensions.js.
+ */
+export function shouldInjectStudioChrome(hostHeader) {
+  const host = String(hostHeader ?? "")
+    .split(",")[0]
+    .trim()
+    .split(":")[0]
+    .toLowerCase();
+  if (isVercelSystemHost(host) && !publicAppHost(process.env?.VITE_PUBLIC_HOSTNAME)) {
+    return false;
+  }
+  return true;
+}
+
 export function isInstallQuery(url) {
   const query = String(url ?? "").split("?", 2)[1] ?? "";
   const params = new URLSearchParams(query);
@@ -297,16 +314,35 @@ export function titleFromDocument(html) {
   return match ? unescapeHtml(match[1]).trim() : "";
 }
 
+/** First matching <meta name|property="key" content="...">, unescaped. */
+export function metaContentFromDocument(html, key) {
+  const want = String(key ?? "").toLowerCase();
+  if (!want) return "";
+  const tags = String(html ?? "").match(/<meta\b[^>]*>/gi) || [];
+  for (const tag of tags) {
+    const names = [...tag.matchAll(/\b(?:property|name)\s*=\s*["']([^"']+)["']/gi)].map(
+      (m) => String(m[1]).toLowerCase(),
+    );
+    if (!names.includes(want)) continue;
+    const content = tag.match(/\bcontent\s*=\s*["']([^"']*)["']/i);
+    if (content) return unescapeHtml(content[1]).trim();
+  }
+  return "";
+}
+
 export function resolveOgTitle(
   site = {},
   appName = DEFAULT_APP_NAME,
   host = "",
   documentTitle = "",
 ) {
-  const fromSite = String(site.title ?? "").trim();
-  if (fromSite) return fromSite;
+  // Per-page <title> must win. site.json is a brand fallback for empty heads
+  // (install page, OG placeholder). Preferring site.title first made every
+  // URL share the same stub — AdSense/SEO hole: og:title ≠ title.
   const fromDoc = String(documentTitle ?? "").trim();
   if (fromDoc) return fromDoc;
+  const fromSite = String(site.title ?? "").trim();
+  if (fromSite) return fromSite;
   const fromHost = appNameFromHost(host);
   if (fromHost && fromHost !== DEFAULT_APP_NAME) return fromHost;
   const fromArg = String(appName ?? "").trim();
@@ -338,17 +374,21 @@ export function grokOgHeadTags({
   appName = DEFAULT_APP_NAME,
   site = {},
   documentTitle = "",
+  documentDescription = "",
   cwd = process.cwd(),
 } = {}) {
   const title = resolveOgTitle(site, appName, host, documentTitle);
   const publicHost = resolvePublicHost(host);
+  const description =
+    String(site.description ?? "").trim() || String(documentDescription ?? "").trim();
   const tags = [
     `<meta name="twitter:card" content="summary_large_image">`,
     `<meta property="og:title" content="${escapeHtml(title)}">`,
+    `<meta name="twitter:title" content="${escapeHtml(title)}">`,
   ];
-  const description = String(site.description ?? "").trim();
   if (description) {
     tags.push(`<meta property="og:description" content="${escapeHtml(description)}">`);
+    tags.push(`<meta name="twitter:description" content="${escapeHtml(description)}">`);
   }
   if (String(site.type ?? "").toLowerCase() === "x:game") {
     tags.push(`<meta property="og:type" content="x:game">`);
@@ -375,11 +415,37 @@ export function grokOgHeadTags({
   return tags;
 }
 
-export function stripShareMetaTags(html) {
+/** Keys grokOgHeadTags will rewrite for this request. Leave the rest (og:url, og:image on Vercel, og:site_name) on the page. */
+function shareMetaKeysForRewrite({ site = {}, host = "", documentDescription = "" } = {}) {
+  const keys = new Set(["og:title", "twitter:card", "twitter:title"]);
+  const description =
+    String(site.description ?? "").trim() || String(documentDescription ?? "").trim();
+  if (description) {
+    keys.add("og:description");
+    keys.add("twitter:description");
+  }
+  if (String(site.type ?? "").toLowerCase() === "x:game") {
+    keys.add("og:type");
+  }
+  if (resolvePublicHost(host)) {
+    keys.add("og:image");
+    keys.add("og:image:width");
+    keys.add("og:image:height");
+  }
+  if (resolvePublicHost(host) && String(site.banner ?? "").trim()) {
+    keys.add("x:game:image");
+    keys.add("x:game:image:width");
+    keys.add("x:game:image:height");
+  }
+  return keys;
+}
+
+export function stripShareMetaTags(html, keys = SHARE_META_KEYS) {
+  const set = keys instanceof Set ? keys : new Set(keys);
   return String(html).replace(/<meta\b[^>]*>/gi, (tag) => {
     const attrs = [...tag.matchAll(/\b(?:property|name)\s*=\s*["']([^"']+)["']/gi)];
     for (const match of attrs) {
-      if (SHARE_META_KEYS.has(String(match[1]).toLowerCase())) return "";
+      if (set.has(String(match[1]).toLowerCase())) return "";
     }
     return tag;
   });
@@ -426,46 +492,55 @@ export function injectGrokPwaHead(html, ctx = {}) {
   if (typeof html !== "string") return html;
   const { site, projectId, creator, creatorId, host, cwd } = normalizeHeadContext(ctx);
   const documentTitle = titleFromDocument(html);
-  const appName = resolveOgTitle(
-    site,
-    ctx.appName ?? DEFAULT_APP_NAME,
-    host,
-    documentTitle,
+  const documentDescription =
+    metaContentFromDocument(html, "og:description") ||
+    metaContentFromDocument(html, "description");
+  const pwaName = resolveOgTitle(site, ctx.appName ?? DEFAULT_APP_NAME, host, "");
+  let next = stripShareMetaTags(
+    html,
+    shareMetaKeysForRewrite({ site, host, documentDescription }),
   );
-  let next = stripShareMetaTags(html);
 
-  const missing = grokPwaHeadTags(appName)
-    .filter(([key]) => {
-      if (key === "manifest") return !next.includes('href="/__grok/manifest.webmanifest"');
-      if (key === "apple-touch-icon") return !next.includes('href="/__grok/icon-180.png"');
-      return !next.includes(`name="${key}"`);
-    })
-    .map(([, tag]) => tag);
+  const studio = shouldInjectStudioChrome(host);
+  const missing = [];
+  if (studio) {
+    missing.push(
+      ...grokPwaHeadTags(pwaName)
+        .filter(([key]) => {
+          if (key === "manifest") return !next.includes('href="/__grok/manifest.webmanifest"');
+          if (key === "apple-touch-icon") return !next.includes('href="/__grok/icon-180.png"');
+          return !next.includes(`name="${key}"`);
+        })
+        .map(([, tag]) => tag),
+    );
+  }
 
   next = insertAfterHeadOpen(
     next,
-    grokOgHeadTags({ host, appName, site, documentTitle, cwd }).join(""),
+    grokOgHeadTags({ host, appName: ctx.appName ?? DEFAULT_APP_NAME, site, documentTitle, documentDescription, cwd }).join(""),
   );
 
-  if (!next.includes("/grok-app-builder/extensions.js")) {
-    missing.push(...grokExtensionsHeadTags(projectId));
-  } else if (projectId && !next.includes('name="grok-project-id"')) {
-    missing.push(`<meta name="grok-project-id" content="${escapeHtml(projectId)}">`);
-  }
-  if (
-    projectId &&
-    !next.includes('property="grok:app_id"') &&
-    !next.includes("property='grok:app_id'")
-  ) {
-    missing.push(`<meta property="grok:app_id" content="${escapeHtml(projectId)}">`);
-  }
-  const creatorTags = grokXCreatorHeadTags(creator, creatorId);
-  if (creatorTags.length > 0) {
-    const hasCreator =
-      next.includes('property="x:creator" content=') ||
-      next.includes("property='x:creator' content=");
-    if (!hasCreator) missing.push(creatorTags[0]);
-    if (!next.includes('property="x:creator:id"')) missing.push(creatorTags[1]);
+  if (studio) {
+    if (!next.includes("/grok-app-builder/extensions.js")) {
+      missing.push(...grokExtensionsHeadTags(projectId));
+    } else if (projectId && !next.includes('name="grok-project-id"')) {
+      missing.push(`<meta name="grok-project-id" content="${escapeHtml(projectId)}">`);
+    }
+    if (
+      projectId &&
+      !next.includes('property="grok:app_id"') &&
+      !next.includes("property='grok:app_id'")
+    ) {
+      missing.push(`<meta property="grok:app_id" content="${escapeHtml(projectId)}">`);
+    }
+    const creatorTags = grokXCreatorHeadTags(creator, creatorId);
+    if (creatorTags.length > 0) {
+      const hasCreator =
+        next.includes('property="x:creator" content=') ||
+        next.includes("property='x:creator' content=");
+      if (!hasCreator) missing.push(creatorTags[0]);
+      if (!next.includes('property="x:creator:id"')) missing.push(creatorTags[1]);
+    }
   }
 
   if (missing.length === 0) return next;
